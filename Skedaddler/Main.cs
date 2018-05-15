@@ -21,7 +21,7 @@ namespace Skedaddler
 		private void Skedaddler_Load(object sender, EventArgs e)
 		{
 			Timer timer = new Timer();
-			timer.Interval = 1000;
+			timer.Interval = 500;
 			timer.Tick += new EventHandler(timer_Tick);
 			timer.Start();
 
@@ -83,18 +83,13 @@ namespace Skedaddler
 			}
 		}
 
-		public void resetResultLabel()
-		{
-			leaveTimeLabel.Text = "----";
-			timeUntilLabel.Text = "----";
-		}
-
 		public void updateTimeRemaining()
 		{
 			DateTime arrivalTime;
 			if (!parseDateTime(arrivalTimeBox.Text, out arrivalTime))
 			{
-				resetResultLabel();
+				leaveTimeLabel.Text = "-";
+				timeUntilLabel.Text = "-";
 				return;
 			}
 
@@ -123,6 +118,7 @@ namespace Skedaddler
 			else
 			{
 				timeUntilLabel.Text = timeRemaining.ToString("h'h 'm'm 's's'", CultureInfo.InvariantCulture);
+// 				timeUntilLabel.Text = timeRemaining.ToString(@"hh\:mm\:ss\.ff", CultureInfo.InvariantCulture);
 			}
 		}
 
