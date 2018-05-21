@@ -42,7 +42,7 @@ namespace Skedaddler
 				return false;
 			}
 
-			string[] formats = { @"h\:mm", @"h\.mm" };
+			string[] formats = { @"H\:mm", @"H\.mm" };
 			if (DateTime.TryParseExact(timeString, formats, CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out result))
 			{
 				return true;
@@ -69,14 +69,18 @@ namespace Skedaddler
 				timeString = timeString.Substring(1);
 			}
 
-			string[] formats = { @"h\:mm", @"h\.mm", @"m" };
-			if (TimeSpan.TryParseExact(timeString, formats, null, out result))
+			try
 			{
-				if(isNegative)
+				result = new TimeSpan(
+					int.Parse(timeString.Split(':')[0]),
+					int.Parse(timeString.Split(':')[1]),
+					0);
+
+				if (isNegative)
 					result = -result;
 				return true;
 			}
-			else
+			catch
 			{
 				result = TimeSpan.Zero;
 				return false;
@@ -117,7 +121,8 @@ namespace Skedaddler
 			}
 			else
 			{
-				timeUntilLabel.Text = timeRemaining.ToString("h'h 'm'm 's's'", CultureInfo.InvariantCulture);
+				timeUntilLabel.Text = String.Format("{0}h {1}m {2}s", (int)timeRemaining.TotalHours, timeRemaining.Minutes, timeRemaining.Seconds);
+// 				timeUntilLabel.Text = timeRemaining.ToString("h'h 'm'm 's's'", CultureInfo.InvariantCulture);
 // 				timeUntilLabel.Text = timeRemaining.ToString(@"hh\:mm\:ss\.ff", CultureInfo.InvariantCulture);
 			}
 		}
