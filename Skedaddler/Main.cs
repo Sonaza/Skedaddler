@@ -32,8 +32,10 @@ namespace Skedaddler
 			flexMinutesBox.Text = "0:00";
 			breakMinutesBox.Text = "0:00";
 
-			soundPlayer = new SoundPlayer("alarm.wav");
+			soundPlayer = new SoundPlayer();
+			soundPlayer.Stream = Properties.Resources.alarm;
 		}
+
 		private void timer_Tick(object sender, EventArgs e)
 		{
 			updateTimeRemaining();
@@ -177,7 +179,7 @@ namespace Skedaddler
 		private void updateAlarm()
 		{
 			TimeSpan timeRemaining = alarmTime - DateTime.Now;
-			if (alarmIsSet && !alarmActive && timeRemaining < TimeSpan.Zero)
+			if (alarmIsSet && !alarmActive && timeRemaining <= TimeSpan.Zero)
 			{
 				alarmActive = true;
 				soundPlayer.PlayLooping();
