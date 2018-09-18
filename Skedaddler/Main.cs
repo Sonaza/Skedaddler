@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using System.Media;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -18,6 +19,8 @@ namespace Skedaddler
 			InitializeComponent();
 		}
 
+		SoundPlayer soundPlayer;
+
 		private void Skedaddler_Load(object sender, EventArgs e)
 		{
 			Timer timer = new Timer();
@@ -28,10 +31,13 @@ namespace Skedaddler
 			arrivalTimeBox.Text = DateTime.Now.ToString(@"H\:mm", CultureInfo.InvariantCulture);
 			flexMinutesBox.Text = "0:00";
 			breakMinutesBox.Text = "0:00";
+
+			soundPlayer = new SoundPlayer("alarm.wav");
 		}
 		private void timer_Tick(object sender, EventArgs e)
 		{
 			updateTimeRemaining();
+			updateAlarm();
 		}
 
 		public bool parseDateTime(String timeString, out DateTime result)
@@ -140,6 +146,87 @@ namespace Skedaddler
 		private void breakMinutesBox_TextChanged(object sender, EventArgs e)
 		{
 			updateTimeRemaining();
+		}
+
+		bool alarmIsSet = false;
+		bool alarmActive = false;
+		DateTime alarmTime;
+
+		private void updateAlarmTime()
+		{
+			if (alarmTimeBox.Text.Length == 0 || !parseDateTime(alarmTimeBox.Text, out alarmTime))
+			{
+				soundPlayer.Stop();
+				alarmIsSet = false;
+				alarmActive = false;
+				return;
+			}
+
+			TimeSpan timeRemaining = alarmTime - DateTime.Now;
+			if (timeRemaining > TimeSpan.Zero)
+			{
+				soundPlayer.Stop();
+				alarmIsSet = true;
+				alarmActive = false;
+				alarmLabel.ForeColor = System.Drawing.Color.ForestGreen;
+			}
+		}
+
+		int alarmCounter = 0;
+
+		private void updateAlarm()
+		{
+			TimeSpan timeRemaining = alarmTime - DateTime.Now;
+			if (alarmIsSet && !alarmActive && timeRemaining < TimeSpan.Zero)
+			{
+				alarmActive = true;
+				soundPlayer.PlayLooping();
+			}
+
+			if (alarmActive)
+			{
+				alarmCounter++;
+				if (alarmCounter % 2 == 0)
+				{
+					alarmLabel.ForeColor = System.Drawing.Color.White;
+					this.BackColor = Color.FromArgb(40, 40, 40);
+				}
+				else
+				{
+					alarmLabel.ForeColor = System.Drawing.Color.OrangeRed;
+					this.BackColor = Color.FromArgb(20, 20, 20);
+				}
+				
+			}
+			
+		}
+
+		private void clearAlarm()
+		{
+			soundPlayer.Stop();
+			alarmTimeBox.Text = "";
+			alarmIsSet = false;
+			alarmActive = false;
+			alarmLabel.ForeColor = System.Drawing.Color.White;
+			this.BackColor = Color.FromArgb(20, 20, 20);
+		}
+
+		private void alarmTimeBox_TextChanged(object sender, EventArgs e)
+		{
+			updateAlarmTime();
+		}
+
+		private void alarmTimeBox_KeyDown(object sender, KeyEventArgs e)
+		{
+			if (e.KeyCode == Keys.Enter)
+			{
+				alarmLabel.Focus();
+			}
+		}
+
+		private void clearAlarmButton_Click(object sender, EventArgs e)
+		{
+			clearAlarm();
 		}
 	}
 }

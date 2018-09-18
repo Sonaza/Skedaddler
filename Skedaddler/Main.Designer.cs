@@ -1,4 +1,6 @@
-﻿namespace Skedaddler
+﻿using System.Windows.Forms;
+
+namespace Skedaddler
 {
 	partial class Skedaddler
 	{
@@ -38,6 +40,9 @@
 			this.leaveTimeLabel = new System.Windows.Forms.Label();
 			this.timeUntilLabel = new System.Windows.Forms.Label();
 			this.label5 = new System.Windows.Forms.Label();
+			this.alarmTimeBox = new System.Windows.Forms.TextBox();
+			this.clearAlarmButton = new System.Windows.Forms.Button();
+			this.alarmLabel = new System.Windows.Forms.Label();
 			this.SuspendLayout();
 			// 
 			// label1
@@ -124,10 +129,11 @@
 			// 
 			// timeUntilLabel
 			// 
-			this.timeUntilLabel.Anchor = System.Windows.Forms.AnchorStyles.None;
+			this.timeUntilLabel.Anchor = System.Windows.Forms.AnchorStyles.Top;
+			this.timeUntilLabel.BackColor = System.Drawing.Color.Transparent;
 			this.timeUntilLabel.Font = new System.Drawing.Font("Open Sans", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.timeUntilLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
-			this.timeUntilLabel.Location = new System.Drawing.Point(12, 118);
+			this.timeUntilLabel.Location = new System.Drawing.Point(12, 122);
 			this.timeUntilLabel.Name = "timeUntilLabel";
 			this.timeUntilLabel.Size = new System.Drawing.Size(312, 37);
 			this.timeUntilLabel.TabIndex = 8;
@@ -145,12 +151,50 @@
 			this.label5.Text = "Time remaining";
 			this.label5.TextAlign = System.Drawing.ContentAlignment.TopCenter;
 			// 
+			// alarmTimeBox
+			// 
+			this.alarmTimeBox.Location = new System.Drawing.Point(118, 172);
+			this.alarmTimeBox.MaxLength = 6;
+			this.alarmTimeBox.Name = "alarmTimeBox";
+			this.alarmTimeBox.Size = new System.Drawing.Size(100, 22);
+			this.alarmTimeBox.TabIndex = 10;
+			this.alarmTimeBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+			this.alarmTimeBox.TextChanged += new System.EventHandler(this.alarmTimeBox_TextChanged);
+			this.alarmTimeBox.KeyDown += new KeyEventHandler(this.alarmTimeBox_KeyDown);
+			
+			// 
+			// clearAlarmButton
+			// 
+			this.clearAlarmButton.ForeColor = System.Drawing.Color.Black;
+			this.clearAlarmButton.Location = new System.Drawing.Point(224, 171);
+			this.clearAlarmButton.Name = "clearAlarmButton";
+			this.clearAlarmButton.Size = new System.Drawing.Size(98, 23);
+			this.clearAlarmButton.TabIndex = 11;
+			this.clearAlarmButton.Text = "Clear Alarm";
+			this.clearAlarmButton.UseVisualStyleBackColor = true;
+			this.clearAlarmButton.Click += new System.EventHandler(this.clearAlarmButton_Click);
+			// 
+			// alarmLabel
+			// 
+			this.alarmLabel.Font = new System.Drawing.Font("Open Sans", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.alarmLabel.ForeColor = System.Drawing.Color.White;
+			this.alarmLabel.Location = new System.Drawing.Point(12, 172);
+			this.alarmLabel.Name = "alarmLabel";
+			this.alarmLabel.Padding = new System.Windows.Forms.Padding(4, 0, 0, 0);
+			this.alarmLabel.Size = new System.Drawing.Size(100, 22);
+			this.alarmLabel.TabIndex = 12;
+			this.alarmLabel.Text = "Alarm:";
+			this.alarmLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			// 
 			// Skedaddler
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 15F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
-			this.ClientSize = new System.Drawing.Size(335, 167);
+			this.ClientSize = new System.Drawing.Size(335, 206);
+			this.Controls.Add(this.alarmLabel);
+			this.Controls.Add(this.clearAlarmButton);
+			this.Controls.Add(this.alarmTimeBox);
 			this.Controls.Add(this.label5);
 			this.Controls.Add(this.timeUntilLabel);
 			this.Controls.Add(this.leaveTimeLabel);
@@ -184,6 +228,9 @@
 		private System.Windows.Forms.Label leaveTimeLabel;
 		private System.Windows.Forms.Label timeUntilLabel;
 		private System.Windows.Forms.Label label5;
+		private System.Windows.Forms.TextBox alarmTimeBox;
+		private System.Windows.Forms.Button clearAlarmButton;
+		private System.Windows.Forms.Label alarmLabel;
 	}
 }
 
