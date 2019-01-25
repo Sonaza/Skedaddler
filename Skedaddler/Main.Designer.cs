@@ -63,6 +63,7 @@ namespace Skedaddler
 			this.arrivalTimeBox.TabIndex = 1;
 			this.arrivalTimeBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
 			this.arrivalTimeBox.TextChanged += new System.EventHandler(this.arrivalTimeBox_TextChanged);
+			this.arrivalTimeBox.KeyDown += new KeyEventHandler(this.arrivalTimeBox_KeyDown);
 			// 
 			// flexMinutesBox
 			// 
@@ -73,6 +74,7 @@ namespace Skedaddler
 			this.flexMinutesBox.TabIndex = 2;
 			this.flexMinutesBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
 			this.flexMinutesBox.TextChanged += new System.EventHandler(this.flexMinutesBox_TextChanged);
+			this.flexMinutesBox.KeyDown += new KeyEventHandler(this.flexMinutesBox_KeyDown);
 			// 
 			// label2
 			// 
@@ -104,6 +106,7 @@ namespace Skedaddler
 			this.breakMinutesBox.TabIndex = 3;
 			this.breakMinutesBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
 			this.breakMinutesBox.TextChanged += new System.EventHandler(this.breakMinutesBox_TextChanged);
+			this.breakMinutesBox.KeyDown += new KeyEventHandler(this.breakMinutesBox_KeyDown);
 			// 
 			// label4
 			// 

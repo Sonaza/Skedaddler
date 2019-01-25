@@ -23,6 +23,8 @@ namespace Skedaddler
 
 		private void Skedaddler_Load(object sender, EventArgs e)
 		{
+			this.Icon = Properties.Resources.skedaddlerIcon;
+
 			Timer timer = new Timer();
 			timer.Interval = 500;
 			timer.Tick += new EventHandler(timer_Tick);
@@ -130,8 +132,6 @@ namespace Skedaddler
 			else
 			{
 				timeUntilLabel.Text = String.Format("{0}h {1}m {2}s", (int)timeRemaining.TotalHours, timeRemaining.Minutes, timeRemaining.Seconds);
-// 				timeUntilLabel.Text = timeRemaining.ToString("h'h 'm'm 's's'", CultureInfo.InvariantCulture);
-// 				timeUntilLabel.Text = timeRemaining.ToString(@"hh\:mm\:ss\.ff", CultureInfo.InvariantCulture);
 			}
 		}
 
@@ -198,9 +198,12 @@ namespace Skedaddler
 					alarmLabel.ForeColor = System.Drawing.Color.OrangeRed;
 					this.BackColor = Color.FromArgb(20, 20, 20);
 				}
-				
+
+				if (timeRemaining <= TimeSpan.FromSeconds(-15.0))
+				{
+					soundPlayer.Stop();
+				}
 			}
-			
 		}
 
 		private void clearAlarm()
@@ -224,6 +227,102 @@ namespace Skedaddler
 			{
 				alarmLabel.Focus();
 			}
+
+			if (e.KeyCode == Keys.Up)
+			{
+				adjustDateTime((TextBox)sender, 1, DateTime.Now, null);
+				e.SuppressKeyPress = true;
+			}
+			else if (e.KeyCode == Keys.Down)
+			{
+				adjustDateTime((TextBox)sender, -1, DateTime.Now, null);
+				e.SuppressKeyPress = true;
+			}
+		}
+
+		private void arrivalTimeBox_KeyDown(object sender, KeyEventArgs e)
+		{
+			if (e.KeyCode == Keys.Up)
+			{
+				adjustDateTime((TextBox)sender, isShiftDown() ? 10 : 1, null, null);
+				e.SuppressKeyPress = true;
+			}
+			else if (e.KeyCode == Keys.Down)
+			{
+				adjustDateTime((TextBox)sender, isShiftDown() ? -10 : -1, null, null);
+				e.SuppressKeyPress = true;
+			}
+		}
+
+		private bool isShiftDown()
+		{
+			return (Control.ModifierKeys & Keys.Shift) != 0;
+		}
+
+		private void flexMinutesBox_KeyDown(object sender, KeyEventArgs e)
+		{
+			if (e.KeyCode == Keys.Up)
+			{
+				adjustTimeSpan((TextBox)sender, 1);
+				e.SuppressKeyPress = true;
+			}
+			else if (e.KeyCode == Keys.Down)
+			{
+				adjustTimeSpan((TextBox)sender, -1);
+				e.SuppressKeyPress = true;
+			}
+		}
+
+		private void breakMinutesBox_KeyDown(object sender, KeyEventArgs e)
+		{
+			if (e.KeyCode == Keys.Up)
+			{
+				adjustTimeSpan((TextBox)sender, 1);
+				e.SuppressKeyPress = true;
+			}
+			else if (e.KeyCode == Keys.Down)
+			{
+				adjustTimeSpan((TextBox)sender, -1);
+				e.SuppressKeyPress = true;
+			}
+		}
+
+		private void adjustDateTime(TextBox theTextbox, int value, DateTime? lowLimit, DateTime? highLimit)
+		{
+			DateTime time;
+			if (theTextbox.Text.Length == 0 || !parseDateTime(theTextbox.Text, out time))
+			{
+				time = DateTime.Now + TimeSpan.FromMinutes(5);
+			}
+			else
+			{
+				TimeSpan deltaTime = TimeSpan.FromMinutes(value);
+
+				if (lowLimit != null && value < 0 && time + deltaTime <= lowLimit)
+					return;
+
+				if (highLimit != null && value > 0 && time + deltaTime >= highLimit)
+					return;
+
+				time += deltaTime;
+			}
+			
+
+			theTextbox.Text = String.Format("{0:H\\:mm}", time);
+			updateAlarmTime();
+		}
+
+		private void adjustTimeSpan(TextBox theTextbox, int value)
+		{
+			TimeSpan time;
+			if (theTextbox.Text.Length == 0 || !parseTimeSpan(theTextbox.Text, out time))
+				return;
+			
+			time += TimeSpan.FromMinutes(value);
+			
+			theTextbox.Text = (time < TimeSpan.Zero ? "-" : "") + String.Format("{0:h\\:mm}", time);
+
+			updateAlarmTime();
 		}
 
 		private void clearAlarmButton_Click(object sender, EventArgs e)

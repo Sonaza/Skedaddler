@@ -68,5 +68,15 @@ namespace Skedaddler.Properties {
                 return ResourceManager.GetStream("alarm", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        internal static System.Drawing.Icon skedaddlerIcon {
+            get {
+                object obj = ResourceManager.GetObject("skedaddlerIcon", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
     }
 }
