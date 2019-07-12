@@ -263,12 +263,22 @@ namespace Skedaddler
 		{
 			if (e.KeyCode == Keys.Up)
 			{
-				adjustTimeSpan((TextBox)sender, 1);
+				adjustTimeSpan((TextBox)sender, 1, true);
 				e.SuppressKeyPress = true;
 			}
 			else if (e.KeyCode == Keys.Down)
 			{
-				adjustTimeSpan((TextBox)sender, -1);
+				adjustTimeSpan((TextBox)sender, -1, true);
+				e.SuppressKeyPress = true;
+			}
+			else if (e.KeyCode == Keys.Enter)
+			{
+				convertToTimeSpan((TextBox)sender, true);
+				e.SuppressKeyPress = true;
+			}
+			else if (e.KeyCode == Keys.Z || e.KeyCode == Keys.Delete)
+			{
+				flexMinutesBox.Text = "0:00";
 				e.SuppressKeyPress = true;
 			}
 		}
@@ -277,12 +287,22 @@ namespace Skedaddler
 		{
 			if (e.KeyCode == Keys.Up)
 			{
-				adjustTimeSpan((TextBox)sender, 1);
+				adjustTimeSpan((TextBox)sender, 1, false);
 				e.SuppressKeyPress = true;
 			}
 			else if (e.KeyCode == Keys.Down)
 			{
-				adjustTimeSpan((TextBox)sender, -1);
+				adjustTimeSpan((TextBox)sender, -1, false);
+				e.SuppressKeyPress = true;
+			}
+			else if (e.KeyCode == Keys.Enter)
+			{
+				convertToTimeSpan((TextBox)sender, false);
+				e.SuppressKeyPress = true;
+			}
+			else if (e.KeyCode == Keys.Z || e.KeyCode == Keys.Delete)
+			{
+				breakMinutesBox.Text = "0:00";
 				e.SuppressKeyPress = true;
 			}
 		}
@@ -307,22 +327,47 @@ namespace Skedaddler
 				time += deltaTime;
 			}
 			
-
 			theTextbox.Text = String.Format("{0:H\\:mm}", time);
 			updateAlarmTime();
 		}
 
-		private void adjustTimeSpan(TextBox theTextbox, int value)
+		private void adjustTimeSpan(TextBox theTextbox, int value, bool canBeNegative)
 		{
 			TimeSpan time;
 			if (theTextbox.Text.Length == 0 || !parseTimeSpan(theTextbox.Text, out time))
+			{
+				theTextbox.Text = "0:00";
 				return;
+			}
 			
 			time += TimeSpan.FromMinutes(value);
+			if (time < TimeSpan.Zero && canBeNegative == false)
+				time = TimeSpan.Zero;
 			
 			theTextbox.Text = (time < TimeSpan.Zero ? "-" : "") + String.Format("{0:h\\:mm}", time);
+		}
 
-			updateAlarmTime();
+		private void convertToTimeSpan(TextBox theTextbox, bool canBeNegative)
+		{
+			TimeSpan time = TimeSpan.Zero;
+			if (theTextbox.Text.Length > 0)
+			{
+				int minutes = 0;
+				try
+				{
+					minutes = Int32.Parse(theTextbox.Text);
+					time = TimeSpan.FromMinutes(minutes);
+				}
+				catch (FormatException)
+				{
+					// Well it wasn't valid but whatever
+				}
+			}
+
+			if (time < TimeSpan.Zero && canBeNegative == false)
+				time = TimeSpan.Zero;
+
+			theTextbox.Text = (time < TimeSpan.Zero ? "-" : "") + String.Format("{0:h\\:mm}", time);
 		}
 
 		private void clearAlarmButton_Click(object sender, EventArgs e)
