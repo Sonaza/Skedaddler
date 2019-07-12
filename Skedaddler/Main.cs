@@ -223,11 +223,6 @@ namespace Skedaddler
 
 		private void alarmTimeBox_KeyDown(object sender, KeyEventArgs e)
 		{
-			if (e.KeyCode == Keys.Enter)
-			{
-				alarmLabel.Focus();
-			}
-
 			if (e.KeyCode == Keys.Up)
 			{
 				adjustDateTime((TextBox)sender, 1, DateTime.Now, null);
@@ -238,6 +233,22 @@ namespace Skedaddler
 				adjustDateTime((TextBox)sender, -1, DateTime.Now, null);
 				e.SuppressKeyPress = true;
 			}
+			else if(e.KeyCode == Keys.Enter)
+			{
+				convertToDatetime((TextBox)sender);
+				alarmLabel.Focus();
+				e.SuppressKeyPress = true;
+			}
+			else if (e.KeyCode == Keys.Z || e.KeyCode == Keys.Delete)
+			{
+				clearAlarm();
+				updateAlarmTime();
+				e.SuppressKeyPress = true;
+			}
+		}
+		private void alarmTimeBox_LostFocus(object sender, EventArgs e)
+		{
+			convertToDatetime((TextBox)sender);
 		}
 
 		private void arrivalTimeBox_KeyDown(object sender, KeyEventArgs e)
@@ -282,6 +293,10 @@ namespace Skedaddler
 				e.SuppressKeyPress = true;
 			}
 		}
+		private void flexMinutesBox_LostFocus(object sender, EventArgs e)
+		{
+			convertToTimeSpan((TextBox)sender, true);
+		}
 
 		private void breakMinutesBox_KeyDown(object sender, KeyEventArgs e)
 		{
@@ -305,6 +320,11 @@ namespace Skedaddler
 				breakMinutesBox.Text = "0:00";
 				e.SuppressKeyPress = true;
 			}
+		}
+
+		private void breakMinutesBox_LostFocus(object sender, EventArgs e)
+		{
+			convertToTimeSpan((TextBox)sender, false);
 		}
 
 		private void adjustDateTime(TextBox theTextbox, int value, DateTime? lowLimit, DateTime? highLimit)
@@ -331,6 +351,35 @@ namespace Skedaddler
 			updateAlarmTime();
 		}
 
+		private void convertToDatetime(TextBox theTextbox)
+		{
+			DateTime time = DateTime.Now;
+			TimeSpan offset = TimeSpan.Zero;
+
+			// If the datetime is already valid there's no need to do anything more
+			if (parseDateTime(theTextbox.Text, out time))
+				return;
+
+			if (theTextbox.Text.Length > 0)
+			{
+				int minutes = 0;
+				if (Int32.TryParse(theTextbox.Text, out minutes))
+					offset = TimeSpan.FromMinutes(minutes);
+			}
+			
+			if (offset <= TimeSpan.Zero)
+			{
+				clearAlarm();
+				updateAlarmTime();
+				return;
+			}
+
+			time = DateTime.Now + offset;
+			
+			theTextbox.Text = String.Format("{0:H\\:mm}", time);
+			updateAlarmTime();
+		}
+
 		private void adjustTimeSpan(TextBox theTextbox, int value, bool canBeNegative)
 		{
 			TimeSpan time;
@@ -350,18 +399,16 @@ namespace Skedaddler
 		private void convertToTimeSpan(TextBox theTextbox, bool canBeNegative)
 		{
 			TimeSpan time = TimeSpan.Zero;
+
+			// If the timespan is already valid there's no need to do anything more
+			if (parseTimeSpan(theTextbox.Text, out time))
+				return;
+
 			if (theTextbox.Text.Length > 0)
 			{
 				int minutes = 0;
-				try
-				{
-					minutes = Int32.Parse(theTextbox.Text);
+				if (Int32.TryParse(theTextbox.Text, out minutes))
 					time = TimeSpan.FromMinutes(minutes);
-				}
-				catch (FormatException)
-				{
-					// Well it wasn't valid but whatever
-				}
 			}
 
 			if (time < TimeSpan.Zero && canBeNegative == false)
