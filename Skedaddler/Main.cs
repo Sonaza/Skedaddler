@@ -9,6 +9,8 @@ using System.Media;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
+using System.Text.RegularExpressions;
 
 namespace Skedaddler
 {
@@ -23,6 +25,24 @@ namespace Skedaddler
 
 		private void Skedaddler_Load(object sender, EventArgs e)
 		{
+			if (Properties.Settings.Default.WindowLocation.X == 0 || Properties.Settings.Default.WindowLocation.Y == 0)
+			{
+				Properties.Settings.Default.Upgrade();
+
+				CenterToScreen();
+				Properties.Settings.Default.WindowLocation = this.Location;
+			}
+			else
+			{
+				this.WindowState = Properties.Settings.Default.WindowState;
+
+				// we don't want a minimized window at startup
+				if (this.WindowState == FormWindowState.Minimized)
+					this.WindowState = FormWindowState.Normal;
+
+				this.Location = Properties.Settings.Default.WindowLocation;
+			}
+
 			this.Icon = Properties.Resources.skedaddlerIcon;
 
 			Timer timer = new Timer();
@@ -30,12 +50,80 @@ namespace Skedaddler
 			timer.Tick += new EventHandler(timer_Tick);
 			timer.Start();
 
-			arrivalTimeBox.Text = DateTime.Now.ToString(@"H\:mm", CultureInfo.InvariantCulture);
-			flexMinutesBox.Text = "0:00";
-			breakMinutesBox.Text = "0:00";
+			if (!reloadValues())
+			{
+				arrivalTimeBox.Text = DateTime.Now.ToString(@"H\:mm", CultureInfo.InvariantCulture);
+				flexMinutesBox.Text = "0:00";
+				breakMinutesBox.Text = "0:00";
+			}
+			saveCurrentValues();
 
 			soundPlayer = new SoundPlayer();
-			soundPlayer.Stream = Properties.Resources.alarm;
+			soundPlayer.Stream = Properties.Resources.alarm;	
+		}
+
+		private void Skedaddler_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			Properties.Settings.Default.WindowState = this.WindowState;
+			if (this.WindowState == FormWindowState.Normal)
+			{
+				Properties.Settings.Default.WindowLocation = this.Location;
+			}
+			else
+			{
+				Properties.Settings.Default.WindowLocation = this.RestoreBounds.Location;
+			}
+
+			Properties.Settings.Default.Save();
+		}
+
+		private void saveCurrentValues()
+		{
+			System.Console.WriteLine("Saving data:");
+			System.Console.WriteLine("  arrivalTimeBox " + arrivalTimeBox.Text);
+			System.Console.WriteLine("  flexMinutesBox " + flexMinutesBox.Text);
+			System.Console.WriteLine("  breakMinutesBox " + breakMinutesBox.Text);
+
+			Properties.Settings.Default.LastStateUpdate = DateTime.Today;
+			Properties.Settings.Default.LastArrivalTime = arrivalTimeBox.Text;
+			Properties.Settings.Default.LastFlexMinutes = flexMinutesBox.Text;
+			Properties.Settings.Default.LastBreakMinutes = breakMinutesBox.Text;
+			Properties.Settings.Default.Save();
+		}
+
+		private bool reloadValues()
+		{
+			if (!Properties.Settings.Default.LastStateUpdate.Equals(DateTime.Today))
+				return false;
+
+			System.Console.WriteLine("Loading data:");
+			System.Console.WriteLine("  LastArrivalTime " + Properties.Settings.Default.LastArrivalTime);
+			System.Console.WriteLine("  LastFlexMinutes " + Properties.Settings.Default.LastFlexMinutes);
+			System.Console.WriteLine("  LastBreakMinutes " + Properties.Settings.Default.LastBreakMinutes);
+
+			// Copy values over since changing the fields will trigger immediate re-save and overwriting values
+			string lastArrivalTime = Properties.Settings.Default.LastArrivalTime;
+			string lastFlexMinutes = Properties.Settings.Default.LastFlexMinutes;
+			string lastBreakMinutes = Properties.Settings.Default.LastBreakMinutes;
+
+			DateTime dt;
+			if (parseDateTime(lastArrivalTime, out dt))
+				arrivalTimeBox.Text = lastArrivalTime;
+			else
+				arrivalTimeBox.Text = DateTime.Now.ToString(@"H\:mm", CultureInfo.InvariantCulture);
+
+			TimeSpan ts;
+			if (parseTimeSpan(lastFlexMinutes, out ts))
+				flexMinutesBox.Text = lastFlexMinutes;
+			else
+				flexMinutesBox.Text = "0:00";
+
+			if (parseTimeSpan(lastBreakMinutes, out ts))
+				breakMinutesBox.Text = lastBreakMinutes;
+			else
+				breakMinutesBox.Text = "0:00";
+
+			return true;
 		}
 
 		private void timer_Tick(object sender, EventArgs e)
@@ -63,7 +151,7 @@ namespace Skedaddler
 				return false;
 			}
 		}
-		
+
 		public bool parseTimeSpan(String timeString, out TimeSpan result)
 		{
 			if (timeString.Length == 0)
@@ -72,22 +160,30 @@ namespace Skedaddler
 				return false;
 			}
 
-			bool isNegative = false;
-			if(timeString[0] == '-')
+			Regex timeSpanRegex = new Regex(@"(-?)([012]?[0-9]):([0-5][0-9])", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+			MatchCollection matches = timeSpanRegex.Matches(timeString);
+
+			if (matches.Count != 1)
 			{
-				isNegative = true;
-				timeString = timeString.Substring(1);
+				result = TimeSpan.Zero;
+				return false;
 			}
+
+			Match match = matches[0];
+			GroupCollection groups = match.Groups;
 
 			try
 			{
 				result = new TimeSpan(
-					int.Parse(timeString.Split(':')[0]),
-					int.Parse(timeString.Split(':')[1]),
-					0);
+					int.Parse(groups[2].Value),
+					int.Parse(groups[3].Value),
+					0
+				);
 
-				if (isNegative)
+				if (groups[1].Value.Equals("-"))
 					result = -result;
+
 				return true;
 			}
 			catch
@@ -138,16 +234,19 @@ namespace Skedaddler
 		private void arrivalTimeBox_TextChanged(object sender, EventArgs e)
 		{
 			updateTimeRemaining();
+			saveCurrentValues();
 		}
 
 		private void flexMinutesBox_TextChanged(object sender, EventArgs e)
 		{
 			updateTimeRemaining();
+			saveCurrentValues();
 		}
 
 		private void breakMinutesBox_TextChanged(object sender, EventArgs e)
 		{
 			updateTimeRemaining();
+			saveCurrentValues();
 		}
 
 		bool alarmIsSet = false;

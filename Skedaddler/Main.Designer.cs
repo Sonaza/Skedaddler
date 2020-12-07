@@ -63,7 +63,7 @@ namespace Skedaddler
 			this.arrivalTimeBox.TabIndex = 1;
 			this.arrivalTimeBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
 			this.arrivalTimeBox.TextChanged += new System.EventHandler(this.arrivalTimeBox_TextChanged);
-			this.arrivalTimeBox.KeyDown += new KeyEventHandler(this.arrivalTimeBox_KeyDown);
+			this.arrivalTimeBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.arrivalTimeBox_KeyDown);
 			// 
 			// flexMinutesBox
 			// 
@@ -74,8 +74,8 @@ namespace Skedaddler
 			this.flexMinutesBox.TabIndex = 2;
 			this.flexMinutesBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
 			this.flexMinutesBox.TextChanged += new System.EventHandler(this.flexMinutesBox_TextChanged);
+			this.flexMinutesBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.flexMinutesBox_KeyDown);
 			this.flexMinutesBox.LostFocus += new System.EventHandler(this.flexMinutesBox_LostFocus);
-			this.flexMinutesBox.KeyDown += new KeyEventHandler(this.flexMinutesBox_KeyDown);
 			// 
 			// label2
 			// 
@@ -107,8 +107,8 @@ namespace Skedaddler
 			this.breakMinutesBox.TabIndex = 3;
 			this.breakMinutesBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
 			this.breakMinutesBox.TextChanged += new System.EventHandler(this.breakMinutesBox_TextChanged);
+			this.breakMinutesBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.breakMinutesBox_KeyDown);
 			this.breakMinutesBox.LostFocus += new System.EventHandler(this.breakMinutesBox_LostFocus);
-			this.breakMinutesBox.KeyDown += new KeyEventHandler(this.breakMinutesBox_KeyDown);
 			// 
 			// label4
 			// 
@@ -165,9 +165,8 @@ namespace Skedaddler
 			this.alarmTimeBox.TabIndex = 10;
 			this.alarmTimeBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
 			this.alarmTimeBox.TextChanged += new System.EventHandler(this.alarmTimeBox_TextChanged);
+			this.alarmTimeBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.alarmTimeBox_KeyDown);
 			this.alarmTimeBox.LostFocus += new System.EventHandler(this.alarmTimeBox_LostFocus);
-			this.alarmTimeBox.KeyDown += new KeyEventHandler(this.alarmTimeBox_KeyDown);
-			
 			// 
 			// clearAlarmButton
 			// 
@@ -216,6 +215,7 @@ namespace Skedaddler
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
 			this.Name = "Skedaddler";
 			this.Text = "Skedaddler";
+			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Skedaddler_FormClosing);
 			this.Load += new System.EventHandler(this.Skedaddler_Load);
 			this.ResumeLayout(false);
 			this.PerformLayout();
