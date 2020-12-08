@@ -11,17 +11,39 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
 using System.Text.RegularExpressions;
+using System.Drawing.Text;
 
 namespace Skedaddler
 {
 	public partial class Skedaddler : Form
 	{
+		[System.Runtime.InteropServices.DllImport("gdi32.dll")]
+		private static extern IntPtr AddFontMemResourceEx(IntPtr pbFont, uint cbFont,
+			IntPtr pdv, [System.Runtime.InteropServices.In] ref uint pcFonts);
+
+		private PrivateFontCollection fonts = new PrivateFontCollection();
+
+		SoundPlayer soundPlayer;
+
 		public Skedaddler()
 		{
 			InitializeComponent();
-		}
 
-		SoundPlayer soundPlayer;
+			byte[] fontData = Properties.Resources.OpenSans;
+			IntPtr fontPtr = System.Runtime.InteropServices.Marshal.AllocCoTaskMem(fontData.Length);
+			System.Runtime.InteropServices.Marshal.Copy(fontData, 0, fontPtr, fontData.Length);
+			uint dummy = 0;
+			fonts.AddMemoryFont(fontPtr, Properties.Resources.OpenSans.Length);
+			AddFontMemResourceEx(fontPtr, (uint)Properties.Resources.OpenSans.Length, IntPtr.Zero, ref dummy);
+			System.Runtime.InteropServices.Marshal.FreeCoTaskMem(fontPtr);
+
+			this.label4.Font = new Font(fonts.Families[0], 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.leaveTimeLabel.Font = new Font(fonts.Families[0], 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+			this.timeUntilLabel.Font = new Font(fonts.Families[0], 23.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+			this.label5.Font = new Font(fonts.Families[0], 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.alarmLabel.Font = new Font(fonts.Families[0], 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+			this.Font = new Font(fonts.Families[0], 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+		}
 
 		private void Skedaddler_Load(object sender, EventArgs e)
 		{
@@ -93,8 +115,17 @@ namespace Skedaddler
 
 		private bool reloadValues()
 		{
-			if (!Properties.Settings.Default.LastStateUpdate.Equals(DateTime.Today))
+
+			try
+			{
+				if (!Properties.Settings.Default.LastStateUpdate.Equals(DateTime.Today))
+					return false;
+			}
+			catch
+			{
+				// Any exception would tell things are wrong or uninitialized
 				return false;
+			}
 
 			System.Console.WriteLine("Loading data:");
 			System.Console.WriteLine("  LastArrivalTime " + Properties.Settings.Default.LastArrivalTime);
