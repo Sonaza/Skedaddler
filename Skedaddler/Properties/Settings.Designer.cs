@@ -117,5 +117,17 @@ namespace Skedaddler.Properties {
                 this["AutoAdjust"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool AutoUpdateArrivalTime {
+            get {
+                return ((bool)(this["AutoUpdateArrivalTime"]));
+            }
+            set {
+                this["AutoUpdateArrivalTime"] = value;
+            }
+        }
     }
 }

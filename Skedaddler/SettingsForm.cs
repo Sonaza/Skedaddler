@@ -14,8 +14,6 @@ namespace Skedaddler
 	{
 		private Skedaddler parent;
 
-		ToolTip autoAdjustTooltip;
-
 		public SettingsForm(Skedaddler parent)
 		{
 			InitializeComponent();
@@ -30,8 +28,6 @@ namespace Skedaddler
 
 			this.label1.Font = new Font(parent.fonts.Families[0], 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.label2.Font = new Font(parent.fonts.Families[0], 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-
-// 			autoAdjustTooltip.Show("Tooltip text goes here", this.autoAdjustBox);
 		}
 
 		private bool saveIgnore = false;
@@ -43,6 +39,8 @@ namespace Skedaddler
 			workDayLengthBox.Text = Properties.Settings.Default.WorkDayLength;
 			autoAdjustBox.Text = Properties.Settings.Default.AutoAdjust;
 
+			autoUpdateArrival.Checked = Properties.Settings.Default.AutoUpdateArrivalTime;
+
 			saveIgnore = false;
 		}
 
@@ -53,6 +51,8 @@ namespace Skedaddler
 
 			Properties.Settings.Default.WorkDayLength = workDayLengthBox.Text;
 			Properties.Settings.Default.AutoAdjust = autoAdjustBox.Text;
+
+			Properties.Settings.Default.AutoUpdateArrivalTime = autoUpdateArrival.Checked;
 
 			Properties.Settings.Default.Save();
 
@@ -175,16 +175,33 @@ namespace Skedaddler
 			}
 		}
 
+		ToolTip autoAdjustTooltip;
+
 		private void autoAdjustBox_Enter(object sender, EventArgs e)
 		{
 			autoAdjustTooltip = new ToolTip();
-			autoAdjustTooltip.Show("Time adjustment for arrival time on first startup.", this.autoAdjustBox, -70, 22);
+			autoAdjustTooltip.Show("Time adjustment for arrival\ntime on refresh (startup/auto).", this.autoAdjustBox, 0, 22);
 		}
 
 		private void autoAdjustBox_Leave(object sender, EventArgs e)
 		{
 			if (autoAdjustTooltip != null)
 				autoAdjustTooltip.Hide(this.autoAdjustBox);
+		}
+
+		ToolTip autoUpdateArrivalTooltip;
+
+		private void autoUpdateArrival_Enter(object sender, EventArgs e)
+		{
+			autoUpdateArrivalTooltip = new ToolTip();
+			autoUpdateArrivalTooltip.Show("Automatically refreshes the arrival time when\nthe program notices the day has changed.",
+				this.autoUpdateArrival, 0, 17);
+		}
+
+		private void autoUpdateArrival_Leave(object sender, EventArgs e)
+		{
+			if (autoUpdateArrivalTooltip != null)
+				autoUpdateArrivalTooltip.Hide(this.autoAdjustBox);
 		}
 	}
 }

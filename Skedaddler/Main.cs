@@ -74,18 +74,7 @@ namespace Skedaddler
 
 			if (!reloadValues())
 			{
-				DateTime arrivalTime = DateTime.Now;
-
-				TimeSpan autoAdjust;
-				if (parseTimeSpan(Properties.Settings.Default.AutoAdjust, out autoAdjust))
-				{
-					arrivalTime += autoAdjust;
-				}
-
-				arrivalTimeBox.Text = arrivalTime.ToString(@"H\:mm", CultureInfo.InvariantCulture);
-
-				flexMinutesBox.Text = "0:00";
-				breakMinutesBox.Text = "0:00";
+				initValues();
 			}
 			saveCurrentValues();
 
@@ -109,6 +98,22 @@ namespace Skedaddler
 
 			if (settingsForm != null && !settingsForm.IsDisposed)
 				settingsForm.Close();
+		}
+
+		private void initValues()
+		{
+			DateTime arrivalTime = DateTime.Now;
+
+			TimeSpan autoAdjust;
+			if (parseTimeSpan(Properties.Settings.Default.AutoAdjust, out autoAdjust))
+			{
+				arrivalTime += autoAdjust;
+			}
+
+			arrivalTimeBox.Text = arrivalTime.ToString(@"H\:mm", CultureInfo.InvariantCulture);
+
+			flexMinutesBox.Text = "0:00";
+			breakMinutesBox.Text = "0:00";
 		}
 
 		private void saveCurrentValues()
@@ -238,6 +243,22 @@ namespace Skedaddler
 
 		public void updateTimeRemaining()
 		{
+			if (Properties.Settings.Default.AutoUpdateArrivalTime)
+			{
+				try
+				{
+					if (!Properties.Settings.Default.LastStateUpdate.Equals(DateTime.Today))
+					{
+						initValues();
+						saveCurrentValues();
+					}
+				}
+				catch
+				{
+					// Don't do anything
+				}
+			}
+
 			DateTime arrivalTime;
 			if (!parseDateTime(arrivalTimeBox.Text, out arrivalTime))
 			{

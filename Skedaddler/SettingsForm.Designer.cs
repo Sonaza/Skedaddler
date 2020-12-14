@@ -34,15 +34,16 @@ namespace Skedaddler
 			this.autoAdjustBox = new System.Windows.Forms.TextBox();
 			this.workDayLengthBox = new System.Windows.Forms.TextBox();
 			this.label1 = new System.Windows.Forms.Label();
+			this.autoUpdateArrival = new System.Windows.Forms.CheckBox();
 			this.SuspendLayout();
 			// 
 			// closeButton
 			// 
 			this.closeButton.ForeColor = System.Drawing.Color.Black;
-			this.closeButton.Location = new System.Drawing.Point(223, 27);
+			this.closeButton.Location = new System.Drawing.Point(223, 26);
 			this.closeButton.Name = "closeButton";
 			this.closeButton.Size = new System.Drawing.Size(100, 24);
-			this.closeButton.TabIndex = 17;
+			this.closeButton.TabIndex = 4;
 			this.closeButton.Text = "Close";
 			this.closeButton.UseVisualStyleBackColor = true;
 			this.closeButton.Click += new System.EventHandler(this.closeButton_Click);
@@ -66,7 +67,7 @@ namespace Skedaddler
 			this.autoAdjustBox.MaxLength = 6;
 			this.autoAdjustBox.Name = "autoAdjustBox";
 			this.autoAdjustBox.Size = new System.Drawing.Size(100, 20);
-			this.autoAdjustBox.TabIndex = 15;
+			this.autoAdjustBox.TabIndex = 2;
 			this.autoAdjustBox.Text = "0:00";
 			this.autoAdjustBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
 			this.autoAdjustBox.TextChanged += new System.EventHandler(this.autoAdjustBox_TextChanged);
@@ -83,7 +84,7 @@ namespace Skedaddler
 			this.workDayLengthBox.MaxLength = 5;
 			this.workDayLengthBox.Name = "workDayLengthBox";
 			this.workDayLengthBox.Size = new System.Drawing.Size(100, 20);
-			this.workDayLengthBox.TabIndex = 14;
+			this.workDayLengthBox.TabIndex = 1;
 			this.workDayLengthBox.Text = "8:00";
 			this.workDayLengthBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
 			this.workDayLengthBox.TextChanged += new System.EventHandler(this.workDayLengthBox_TextChanged);
@@ -98,10 +99,23 @@ namespace Skedaddler
 			this.label1.TabIndex = 13;
 			this.label1.Text = "Work Day Length";
 			// 
+			// autoUpdateArrival
+			// 
+			this.autoUpdateArrival.AutoSize = true;
+			this.autoUpdateArrival.Location = new System.Drawing.Point(20, 58);
+			this.autoUpdateArrival.Name = "autoUpdateArrival";
+			this.autoUpdateArrival.Size = new System.Drawing.Size(191, 17);
+			this.autoUpdateArrival.TabIndex = 3;
+			this.autoUpdateArrival.Text = "Auto Update Arrival Time Next Day";
+			this.autoUpdateArrival.UseVisualStyleBackColor = true;
+			this.autoUpdateArrival.Enter += new System.EventHandler(this.autoUpdateArrival_Enter);
+			this.autoUpdateArrival.Leave += new System.EventHandler(this.autoUpdateArrival_Leave);
+			// 
 			// SettingsForm
 			// 
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
-			this.ClientSize = new System.Drawing.Size(335, 70);
+			this.ClientSize = new System.Drawing.Size(334, 87);
+			this.Controls.Add(this.autoUpdateArrival);
 			this.Controls.Add(this.closeButton);
 			this.Controls.Add(this.label2);
 			this.Controls.Add(this.autoAdjustBox);
@@ -127,5 +141,6 @@ namespace Skedaddler
 		private System.Windows.Forms.TextBox autoAdjustBox;
 		private System.Windows.Forms.TextBox workDayLengthBox;
 		private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.CheckBox autoUpdateArrival;
 	}
 }
