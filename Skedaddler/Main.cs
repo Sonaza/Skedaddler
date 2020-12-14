@@ -21,8 +21,9 @@ namespace Skedaddler
 		private static extern IntPtr AddFontMemResourceEx(IntPtr pbFont, uint cbFont,
 			IntPtr pdv, [System.Runtime.InteropServices.In] ref uint pcFonts);
 
-		private PrivateFontCollection fonts = new PrivateFontCollection();
+		public PrivateFontCollection fonts = new PrivateFontCollection();
 
+		private SettingsForm settingsForm;
 		SoundPlayer soundPlayer;
 
 		public Skedaddler()
@@ -41,7 +42,6 @@ namespace Skedaddler
 			this.leaveTimeLabel.Font = new Font(fonts.Families[0], 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
 			this.timeUntilLabel.Font = new Font(fonts.Families[0], 23.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
 			this.label5.Font = new Font(fonts.Families[0], 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-			this.alarmLabel.Font = new Font(fonts.Families[0], 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
 			this.Font = new Font(fonts.Families[0], 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 		}
 
@@ -74,7 +74,16 @@ namespace Skedaddler
 
 			if (!reloadValues())
 			{
-				arrivalTimeBox.Text = DateTime.Now.ToString(@"H\:mm", CultureInfo.InvariantCulture);
+				DateTime arrivalTime = DateTime.Now;
+
+				TimeSpan autoAdjust;
+				if (parseTimeSpan(Properties.Settings.Default.AutoAdjust, out autoAdjust))
+				{
+					arrivalTime += autoAdjust;
+				}
+
+				arrivalTimeBox.Text = arrivalTime.ToString(@"H\:mm", CultureInfo.InvariantCulture);
+
 				flexMinutesBox.Text = "0:00";
 				breakMinutesBox.Text = "0:00";
 			}
@@ -97,6 +106,9 @@ namespace Skedaddler
 			}
 
 			Properties.Settings.Default.Save();
+
+			if (settingsForm != null && !settingsForm.IsDisposed)
+				settingsForm.Close();
 		}
 
 		private void saveCurrentValues()
@@ -163,7 +175,7 @@ namespace Skedaddler
 			updateAlarm();
 		}
 
-		public bool parseDateTime(String timeString, out DateTime result)
+		static public bool parseDateTime(String timeString, out DateTime result)
 		{
 			if (timeString.Length == 0)
 			{
@@ -183,7 +195,7 @@ namespace Skedaddler
 			}
 		}
 
-		public bool parseTimeSpan(String timeString, out TimeSpan result)
+		static public bool parseTimeSpan(String timeString, out TimeSpan result)
 		{
 			if (timeString.Length == 0)
 			{
@@ -234,7 +246,9 @@ namespace Skedaddler
 				return;
 			}
 
-			TimeSpan workDayLength = TimeSpan.FromHours(8);
+			TimeSpan workDayLength;
+			if (!parseTimeSpan(Properties.Settings.Default.WorkDayLength, out workDayLength))
+				workDayLength = TimeSpan.FromHours(8);
 
 			TimeSpan flexTime = TimeSpan.Zero;
 			if (parseTimeSpan(flexMinutesBox.Text, out flexTime))
@@ -300,7 +314,7 @@ namespace Skedaddler
 				soundPlayer.Stop();
 				alarmIsSet = true;
 				alarmActive = false;
-				alarmLabel.ForeColor = System.Drawing.Color.ForestGreen;
+// 				alarmLabel.ForeColor = System.Drawing.Color.ForestGreen;
 			}
 		}
 
@@ -320,12 +334,10 @@ namespace Skedaddler
 				alarmCounter++;
 				if (alarmCounter % 2 == 0)
 				{
-					alarmLabel.ForeColor = System.Drawing.Color.White;
 					this.BackColor = Color.FromArgb(40, 40, 40);
 				}
 				else
 				{
-					alarmLabel.ForeColor = System.Drawing.Color.OrangeRed;
 					this.BackColor = Color.FromArgb(20, 20, 20);
 				}
 
@@ -339,15 +351,20 @@ namespace Skedaddler
 		private void clearAlarm()
 		{
 			soundPlayer.Stop();
-			alarmTimeBox.Text = "";
+			alarmTimeBox.Text = "Alarm";
+			alarmTimeBox.ForeColor = System.Drawing.Color.DarkGray;
 			alarmIsSet = false;
 			alarmActive = false;
-			alarmLabel.ForeColor = System.Drawing.Color.White;
 			this.BackColor = Color.FromArgb(20, 20, 20);
+
+			label1.Focus();
 		}
 
 		private void alarmTimeBox_TextChanged(object sender, EventArgs e)
 		{
+			if (alarmTimeBox.Text == "Alarm")
+				return;
+
 			updateAlarmTime();
 		}
 
@@ -366,7 +383,7 @@ namespace Skedaddler
 			else if(e.KeyCode == Keys.Enter)
 			{
 				convertToDatetime((TextBox)sender);
-				alarmLabel.Focus();
+				label1.Focus();
 				e.SuppressKeyPress = true;
 			}
 			else if (e.KeyCode == Keys.Z || e.KeyCode == Keys.Delete)
@@ -379,6 +396,24 @@ namespace Skedaddler
 		private void alarmTimeBox_LostFocus(object sender, EventArgs e)
 		{
 			convertToDatetime((TextBox)sender);
+		}
+
+		private void alarmTimeBox_Enter(object sender, EventArgs e)
+		{
+			if (alarmTimeBox.Text == "Alarm")
+			{
+				alarmTimeBox.Text = "";
+				alarmTimeBox.ForeColor = System.Drawing.Color.White;
+			}
+		}
+
+		private void alarmTimeBox_Leave(object sender, EventArgs e)
+		{
+			if (alarmTimeBox.Text == "")
+			{
+				alarmTimeBox.Text = "Alarm";
+				alarmTimeBox.ForeColor = System.Drawing.Color.DarkGray;
+			}
 		}
 
 		private void arrivalTimeBox_KeyDown(object sender, KeyEventArgs e)
@@ -550,6 +585,22 @@ namespace Skedaddler
 		private void clearAlarmButton_Click(object sender, EventArgs e)
 		{
 			clearAlarm();
+		}
+
+		private void settingsButton_Click(object sender, EventArgs e)
+		{
+			if (settingsForm != null && !settingsForm.IsDisposed)
+				return;
+
+			settingsForm = new SettingsForm(this);
+
+			settingsForm.Owner = this;
+			settingsForm.Show();
+
+			settingsForm.Location = new Point(
+				this.Location.X + this.Width / 2 - settingsForm.Width / 2,
+				this.Location.Y + this.Height / 2 - settingsForm.Height / 2
+			);
 		}
 	}
 }

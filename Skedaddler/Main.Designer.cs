@@ -42,7 +42,7 @@ namespace Skedaddler
 			this.label5 = new System.Windows.Forms.Label();
 			this.alarmTimeBox = new System.Windows.Forms.TextBox();
 			this.clearAlarmButton = new System.Windows.Forms.Button();
-			this.alarmLabel = new System.Windows.Forms.Label();
+			this.settingsButton = new System.Windows.Forms.Button();
 			this.SuspendLayout();
 			// 
 			// label1
@@ -56,6 +56,9 @@ namespace Skedaddler
 			// 
 			// arrivalTimeBox
 			// 
+			this.arrivalTimeBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
+			this.arrivalTimeBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.arrivalTimeBox.ForeColor = System.Drawing.Color.White;
 			this.arrivalTimeBox.Location = new System.Drawing.Point(12, 28);
 			this.arrivalTimeBox.MaxLength = 5;
 			this.arrivalTimeBox.Name = "arrivalTimeBox";
@@ -67,6 +70,9 @@ namespace Skedaddler
 			// 
 			// flexMinutesBox
 			// 
+			this.flexMinutesBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
+			this.flexMinutesBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.flexMinutesBox.ForeColor = System.Drawing.Color.White;
 			this.flexMinutesBox.Location = new System.Drawing.Point(118, 28);
 			this.flexMinutesBox.MaxLength = 6;
 			this.flexMinutesBox.Name = "flexMinutesBox";
@@ -100,6 +106,9 @@ namespace Skedaddler
 			// 
 			// breakMinutesBox
 			// 
+			this.breakMinutesBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
+			this.breakMinutesBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.breakMinutesBox.ForeColor = System.Drawing.Color.White;
 			this.breakMinutesBox.Location = new System.Drawing.Point(224, 28);
 			this.breakMinutesBox.MaxLength = 5;
 			this.breakMinutesBox.Name = "breakMinutesBox";
@@ -158,38 +167,44 @@ namespace Skedaddler
 			// 
 			// alarmTimeBox
 			// 
-			this.alarmTimeBox.Location = new System.Drawing.Point(118, 172);
+			this.alarmTimeBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
+			this.alarmTimeBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.alarmTimeBox.ForeColor = System.Drawing.Color.DarkGray;
+			this.alarmTimeBox.Location = new System.Drawing.Point(12, 172);
 			this.alarmTimeBox.MaxLength = 6;
 			this.alarmTimeBox.Name = "alarmTimeBox";
 			this.alarmTimeBox.Size = new System.Drawing.Size(100, 22);
 			this.alarmTimeBox.TabIndex = 10;
+			this.alarmTimeBox.Text = "Alarm";
 			this.alarmTimeBox.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
 			this.alarmTimeBox.TextChanged += new System.EventHandler(this.alarmTimeBox_TextChanged);
+			this.alarmTimeBox.Enter += new System.EventHandler(this.alarmTimeBox_Enter);
 			this.alarmTimeBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.alarmTimeBox_KeyDown);
+			this.alarmTimeBox.Leave += new System.EventHandler(this.alarmTimeBox_Leave);
 			this.alarmTimeBox.LostFocus += new System.EventHandler(this.alarmTimeBox_LostFocus);
 			// 
 			// clearAlarmButton
 			// 
+			this.clearAlarmButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
 			this.clearAlarmButton.ForeColor = System.Drawing.Color.Black;
-			this.clearAlarmButton.Location = new System.Drawing.Point(224, 171);
+			this.clearAlarmButton.Location = new System.Drawing.Point(118, 171);
 			this.clearAlarmButton.Name = "clearAlarmButton";
-			this.clearAlarmButton.Size = new System.Drawing.Size(98, 23);
+			this.clearAlarmButton.Size = new System.Drawing.Size(100, 24);
 			this.clearAlarmButton.TabIndex = 11;
 			this.clearAlarmButton.Text = "Clear Alarm";
 			this.clearAlarmButton.UseVisualStyleBackColor = true;
 			this.clearAlarmButton.Click += new System.EventHandler(this.clearAlarmButton_Click);
 			// 
-			// alarmLabel
+			// settingsButton
 			// 
-			this.alarmLabel.Font = new System.Drawing.Font("Open Sans", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.alarmLabel.ForeColor = System.Drawing.Color.White;
-			this.alarmLabel.Location = new System.Drawing.Point(12, 172);
-			this.alarmLabel.Name = "alarmLabel";
-			this.alarmLabel.Padding = new System.Windows.Forms.Padding(4, 0, 0, 0);
-			this.alarmLabel.Size = new System.Drawing.Size(100, 22);
-			this.alarmLabel.TabIndex = 12;
-			this.alarmLabel.Text = "Alarm:";
-			this.alarmLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			this.settingsButton.ForeColor = System.Drawing.Color.Black;
+			this.settingsButton.Location = new System.Drawing.Point(224, 171);
+			this.settingsButton.Name = "settingsButton";
+			this.settingsButton.Size = new System.Drawing.Size(100, 24);
+			this.settingsButton.TabIndex = 12;
+			this.settingsButton.Text = "Settings";
+			this.settingsButton.UseVisualStyleBackColor = true;
+			this.settingsButton.Click += new System.EventHandler(this.settingsButton_Click);
 			// 
 			// Skedaddler
 			// 
@@ -197,7 +212,7 @@ namespace Skedaddler
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
 			this.ClientSize = new System.Drawing.Size(335, 206);
-			this.Controls.Add(this.alarmLabel);
+			this.Controls.Add(this.settingsButton);
 			this.Controls.Add(this.clearAlarmButton);
 			this.Controls.Add(this.alarmTimeBox);
 			this.Controls.Add(this.label5);
@@ -236,7 +251,7 @@ namespace Skedaddler
 		private System.Windows.Forms.Label label5;
 		private System.Windows.Forms.TextBox alarmTimeBox;
 		private System.Windows.Forms.Button clearAlarmButton;
-		private System.Windows.Forms.Label alarmLabel;
+		private Button settingsButton;
 	}
 }
 

@@ -20,5 +20,11 @@
     <Setting Name="LastBreakMinutes" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
+    <Setting Name="WorkDayLength" Type="System.String" Scope="User">
+      <Value Profile="(Default)">8:00</Value>
+    </Setting>
+    <Setting Name="AutoAdjust" Type="System.String" Scope="User">
+      <Value Profile="(Default)">0:00</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

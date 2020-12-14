@@ -93,5 +93,29 @@ namespace Skedaddler.Properties {
                 this["LastBreakMinutes"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("8:00")]
+        public string WorkDayLength {
+            get {
+                return ((string)(this["WorkDayLength"]));
+            }
+            set {
+                this["WorkDayLength"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0:00")]
+        public string AutoAdjust {
+            get {
+                return ((string)(this["AutoAdjust"]));
+            }
+            set {
+                this["AutoAdjust"] = value;
+            }
+        }
     }
 }
