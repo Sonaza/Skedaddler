@@ -409,6 +409,15 @@ namespace Skedaddler
 			}
 			else if (e.KeyCode == Keys.Z || e.KeyCode == Keys.Delete)
 			{
+				if (e.KeyCode == Keys.Delete && !isShiftDown())
+				{
+					TextBox box = (TextBox)sender;
+					if (box.TextLength != box.SelectionStart && box.TextLength > 1)
+					{
+						return;
+					}
+				}
+
 				clearAlarm();
 				updateAlarmTime();
 				e.SuppressKeyPress = true;
@@ -475,6 +484,15 @@ namespace Skedaddler
 			}
 			else if (e.KeyCode == Keys.Z || e.KeyCode == Keys.Delete)
 			{
+				if (e.KeyCode == Keys.Delete && !isShiftDown())
+				{
+					TextBox box = (TextBox)sender;
+					if (box.TextLength != box.SelectionStart && box.TextLength > 1)
+					{
+						return;
+					}
+				}
+
 				flexMinutesBox.Text = "0:00";
 				e.SuppressKeyPress = true;
 			}
@@ -503,6 +521,15 @@ namespace Skedaddler
 			}
 			else if (e.KeyCode == Keys.Z || e.KeyCode == Keys.Delete)
 			{
+				if (e.KeyCode == Keys.Delete && !isShiftDown())
+				{
+					TextBox box = (TextBox)sender;
+					if (box.TextLength != box.SelectionStart && box.TextLength > 1)
+					{
+						return;
+					}
+				}
+
 				breakMinutesBox.Text = "0:00";
 				e.SuppressKeyPress = true;
 			}
