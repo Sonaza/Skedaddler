@@ -253,32 +253,34 @@ namespace Skedaddler
 				&& (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
 		}
 
-		private bool updateBlock = false;
-
 		private void openURLDialog()
 		{
 			if (!isValidURI(Properties.Settings.Default.ArrivalUpdateURL))
 				return;
 
-			Thread t = new Thread(() => openURLDialogImpl());
+			Thread t = new Thread(() => openURLDialogImpl(Properties.Settings.Default.ArrivalUpdateURL));
 			t.Start();
 		}
-		private void openURLDialogImpl()
+		private void openURLDialogImpl(object urlObjectParam)
 		{
+			string urlParam = (string)urlObjectParam;
+
 			string caption = "Open URL";
-			string message = "Open following URL in the default browser?\n\n" + Properties.Settings.Default.ArrivalUpdateURL;
+			string message = "Open the following URL in the default browser?\n\n" + urlParam;
 			DialogResult result = MessageBox.Show(message, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
 
 			if (result == DialogResult.Yes)
 			{
 				var psi = new System.Diagnostics.ProcessStartInfo
 				{
-					FileName = Properties.Settings.Default.ArrivalUpdateURL,
+					FileName = urlParam,
 					UseShellExecute = true
 				};
 				System.Diagnostics.Process.Start(psi);
 			}
 		}
+
+		private bool updateBlock = false;
 
 		public void updateTimeRemaining()
 		{
