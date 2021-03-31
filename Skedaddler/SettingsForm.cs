@@ -28,6 +28,7 @@ namespace Skedaddler
 
 			this.label1.Font = new Font(parent.fonts.Families[0], 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.label2.Font = new Font(parent.fonts.Families[0], 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+			this.label3.Font = new Font(parent.fonts.Families[0], 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 		}
 
 		private bool saveIgnore = false;
@@ -41,6 +42,8 @@ namespace Skedaddler
 
 			autoUpdateArrival.Checked = Properties.Settings.Default.AutoUpdateArrivalTime;
 
+			arrivalUpdateURL.Text = Properties.Settings.Default.ArrivalUpdateURL;
+
 			saveIgnore = false;
 		}
 
@@ -53,6 +56,8 @@ namespace Skedaddler
 			Properties.Settings.Default.AutoAdjust = autoAdjustBox.Text;
 
 			Properties.Settings.Default.AutoUpdateArrivalTime = autoUpdateArrival.Checked;
+
+			Properties.Settings.Default.ArrivalUpdateURL = arrivalUpdateURL.Text;
 
 			Properties.Settings.Default.Save();
 
@@ -202,6 +207,11 @@ namespace Skedaddler
 		{
 			if (autoUpdateArrivalTooltip != null)
 				autoUpdateArrivalTooltip.Hide(this.autoAdjustBox);
+		}
+
+		private void arrivalWebAddress_TextChanged(object sender, EventArgs e)
+		{
+			saveSettings();
 		}
 	}
 }

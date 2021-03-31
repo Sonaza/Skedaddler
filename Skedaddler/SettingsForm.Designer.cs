@@ -35,6 +35,8 @@ namespace Skedaddler
 			this.workDayLengthBox = new System.Windows.Forms.TextBox();
 			this.label1 = new System.Windows.Forms.Label();
 			this.autoUpdateArrival = new System.Windows.Forms.CheckBox();
+			this.arrivalUpdateURL = new System.Windows.Forms.TextBox();
+			this.label3 = new System.Windows.Forms.Label();
 			this.SuspendLayout();
 			// 
 			// closeButton
@@ -43,7 +45,7 @@ namespace Skedaddler
 			this.closeButton.Location = new System.Drawing.Point(223, 26);
 			this.closeButton.Name = "closeButton";
 			this.closeButton.Size = new System.Drawing.Size(100, 24);
-			this.closeButton.TabIndex = 4;
+			this.closeButton.TabIndex = 5;
 			this.closeButton.Text = "Close";
 			this.closeButton.UseVisualStyleBackColor = true;
 			this.closeButton.Click += new System.EventHandler(this.closeButton_Click);
@@ -111,10 +113,35 @@ namespace Skedaddler
 			this.autoUpdateArrival.Enter += new System.EventHandler(this.autoUpdateArrival_Enter);
 			this.autoUpdateArrival.Leave += new System.EventHandler(this.autoUpdateArrival_Leave);
 			// 
+			// arrivalWebAddress
+			// 
+			this.arrivalUpdateURL.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
+			this.arrivalUpdateURL.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+			this.arrivalUpdateURL.ForeColor = System.Drawing.Color.White;
+			this.arrivalUpdateURL.Location = new System.Drawing.Point(12, 94);
+			this.arrivalUpdateURL.MaxLength = 2000;
+			this.arrivalUpdateURL.Name = "arrivalWebAddress";
+			this.arrivalUpdateURL.Size = new System.Drawing.Size(311, 20);
+			this.arrivalUpdateURL.TabIndex = 4;
+			this.arrivalUpdateURL.Text = "";
+			this.arrivalUpdateURL.TextChanged += new System.EventHandler(this.arrivalWebAddress_TextChanged);
+			// 
+			// label3
+			// 
+			this.label3.AutoSize = true;
+			this.label3.Location = new System.Drawing.Point(17, 78);
+			this.label3.Name = "label3";
+			this.label3.Size = new System.Drawing.Size(192, 13);
+			this.label3.TabIndex = 18;
+			this.label3.Text = "URL to open on Auto Arrival update:";
+			this.label3.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+			// 
 			// SettingsForm
 			// 
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
-			this.ClientSize = new System.Drawing.Size(334, 87);
+			this.ClientSize = new System.Drawing.Size(334, 125);
+			this.Controls.Add(this.label3);
+			this.Controls.Add(this.arrivalUpdateURL);
 			this.Controls.Add(this.autoUpdateArrival);
 			this.Controls.Add(this.closeButton);
 			this.Controls.Add(this.label2);
@@ -142,5 +169,7 @@ namespace Skedaddler
 		private System.Windows.Forms.TextBox workDayLengthBox;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.CheckBox autoUpdateArrival;
+		private System.Windows.Forms.TextBox arrivalUpdateURL;
+		private System.Windows.Forms.Label label3;
 	}
 }

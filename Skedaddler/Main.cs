@@ -12,6 +12,8 @@ using System.Windows.Forms;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Drawing.Text;
+using System.Threading;
+using Timer = System.Windows.Forms.Timer;
 
 namespace Skedaddler
 {
@@ -43,6 +45,8 @@ namespace Skedaddler
 			this.timeUntilLabel.Font = new Font(fonts.Families[0], 23.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
 			this.label5.Font = new Font(fonts.Families[0], 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.Font = new Font(fonts.Families[0], 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+
+// 			Properties.Settings.Default.LastStateUpdate = new DateTime(0);
 		}
 
 		private void Skedaddler_Load(object sender, EventArgs e)
@@ -132,7 +136,6 @@ namespace Skedaddler
 
 		private bool reloadValues()
 		{
-
 			try
 			{
 				if (!Properties.Settings.Default.LastStateUpdate.Equals(DateTime.Today))
@@ -240,9 +243,51 @@ namespace Skedaddler
 				return false;
 			}
 		}
+		private bool isValidURI(string uriParam)
+		{
+			if (uriParam.Length == 0)
+				return false;
+
+			Uri uriResult;
+			return Uri.TryCreate(uriParam, UriKind.Absolute, out uriResult)
+				&& (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+		}
+
+		private bool updateBlock = false;
+
+		private void openURLDialog()
+		{
+			if (!isValidURI(Properties.Settings.Default.ArrivalUpdateURL))
+				return;
+
+			Thread t = new Thread(() => openURLDialogImpl());
+			t.Start();
+		}
+		private void openURLDialogImpl()
+		{
+			string caption = "Open URL";
+			string message = "Open following URL in the default browser?\n\n" + Properties.Settings.Default.ArrivalUpdateURL;
+			DialogResult result = MessageBox.Show(message, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+
+			if (result == DialogResult.Yes)
+			{
+				var psi = new System.Diagnostics.ProcessStartInfo
+				{
+					FileName = Properties.Settings.Default.ArrivalUpdateURL,
+					UseShellExecute = true
+				};
+				System.Diagnostics.Process.Start(psi);
+			}
+		}
 
 		public void updateTimeRemaining()
 		{
+			// Dirty hack to prevent this method being called again when the code below is doing initValues() call.
+			if (updateBlock)
+				return;
+
+			updateBlock = true;
+
 			if (Properties.Settings.Default.AutoUpdateArrivalTime)
 			{
 				try
@@ -251,6 +296,8 @@ namespace Skedaddler
 					{
 						initValues();
 						saveCurrentValues();
+
+						openURLDialog();
 					}
 				}
 				catch
@@ -258,6 +305,8 @@ namespace Skedaddler
 					// Don't do anything
 				}
 			}
+
+			updateBlock = false;
 
 			DateTime arrivalTime;
 			if (!parseDateTime(arrivalTimeBox.Text, out arrivalTime))
