@@ -149,10 +149,10 @@ namespace Skedaddler
 			this.timeUntilLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(192)))), ((int)(((byte)(0)))));
 			this.timeUntilLabel.Location = new System.Drawing.Point(12, 122);
 			this.timeUntilLabel.Name = "timeUntilLabel";
-			this.timeUntilLabel.Size = new System.Drawing.Size(312, 37);
+			this.timeUntilLabel.Size = new System.Drawing.Size(312, 46);
 			this.timeUntilLabel.TabIndex = 8;
 			this.timeUntilLabel.Text = "2h 12m 5s";
-			this.timeUntilLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+			this.timeUntilLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
 			// 
 			// label5
 			// 

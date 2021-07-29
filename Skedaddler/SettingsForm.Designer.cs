@@ -37,6 +37,7 @@ namespace Skedaddler
 			this.autoUpdateArrival = new System.Windows.Forms.CheckBox();
 			this.arrivalUpdateURL = new System.Windows.Forms.TextBox();
 			this.label3 = new System.Windows.Forms.Label();
+			this.resetOnResume = new System.Windows.Forms.CheckBox();
 			this.SuspendLayout();
 			// 
 			// closeButton
@@ -45,7 +46,7 @@ namespace Skedaddler
 			this.closeButton.Location = new System.Drawing.Point(223, 26);
 			this.closeButton.Name = "closeButton";
 			this.closeButton.Size = new System.Drawing.Size(100, 24);
-			this.closeButton.TabIndex = 5;
+			this.closeButton.TabIndex = 6;
 			this.closeButton.Text = "Close";
 			this.closeButton.UseVisualStyleBackColor = true;
 			this.closeButton.Click += new System.EventHandler(this.closeButton_Click);
@@ -104,7 +105,7 @@ namespace Skedaddler
 			// autoUpdateArrival
 			// 
 			this.autoUpdateArrival.AutoSize = true;
-			this.autoUpdateArrival.Location = new System.Drawing.Point(20, 58);
+			this.autoUpdateArrival.Location = new System.Drawing.Point(11, 58);
 			this.autoUpdateArrival.Name = "autoUpdateArrival";
 			this.autoUpdateArrival.Size = new System.Drawing.Size(191, 17);
 			this.autoUpdateArrival.TabIndex = 3;
@@ -113,33 +114,44 @@ namespace Skedaddler
 			this.autoUpdateArrival.Enter += new System.EventHandler(this.autoUpdateArrival_Enter);
 			this.autoUpdateArrival.Leave += new System.EventHandler(this.autoUpdateArrival_Leave);
 			// 
-			// arrivalWebAddress
+			// arrivalUpdateURL
 			// 
 			this.arrivalUpdateURL.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(40)))), ((int)(((byte)(40)))), ((int)(((byte)(40)))));
 			this.arrivalUpdateURL.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
 			this.arrivalUpdateURL.ForeColor = System.Drawing.Color.White;
 			this.arrivalUpdateURL.Location = new System.Drawing.Point(12, 94);
 			this.arrivalUpdateURL.MaxLength = 2000;
-			this.arrivalUpdateURL.Name = "arrivalWebAddress";
+			this.arrivalUpdateURL.Name = "arrivalUpdateURL";
 			this.arrivalUpdateURL.Size = new System.Drawing.Size(311, 20);
-			this.arrivalUpdateURL.TabIndex = 4;
-			this.arrivalUpdateURL.Text = "";
+			this.arrivalUpdateURL.TabIndex = 5;
 			this.arrivalUpdateURL.TextChanged += new System.EventHandler(this.arrivalWebAddress_TextChanged);
 			// 
 			// label3
 			// 
 			this.label3.AutoSize = true;
-			this.label3.Location = new System.Drawing.Point(17, 78);
+			this.label3.Location = new System.Drawing.Point(12, 78);
 			this.label3.Name = "label3";
-			this.label3.Size = new System.Drawing.Size(192, 13);
+			this.label3.Size = new System.Drawing.Size(179, 13);
 			this.label3.TabIndex = 18;
 			this.label3.Text = "URL to open on Auto Arrival update:";
 			this.label3.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+			// 
+			// resetOnResume
+			// 
+			this.resetOnResume.AutoSize = true;
+			this.resetOnResume.Location = new System.Drawing.Point(212, 58);
+			this.resetOnResume.Name = "resetOnResume";
+			this.resetOnResume.Size = new System.Drawing.Size(111, 17);
+			this.resetOnResume.TabIndex = 4;
+			this.resetOnResume.Text = "Reset on Resume";
+			this.resetOnResume.UseVisualStyleBackColor = true;
+			this.resetOnResume.CheckedChanged += new System.EventHandler(this.resetOnResume_CheckedChanged);
 			// 
 			// SettingsForm
 			// 
 			this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(20)))), ((int)(((byte)(20)))), ((int)(((byte)(20)))));
 			this.ClientSize = new System.Drawing.Size(334, 125);
+			this.Controls.Add(this.resetOnResume);
 			this.Controls.Add(this.label3);
 			this.Controls.Add(this.arrivalUpdateURL);
 			this.Controls.Add(this.autoUpdateArrival);
@@ -171,5 +183,6 @@ namespace Skedaddler
 		private System.Windows.Forms.CheckBox autoUpdateArrival;
 		private System.Windows.Forms.TextBox arrivalUpdateURL;
 		private System.Windows.Forms.Label label3;
+		private System.Windows.Forms.CheckBox resetOnResume;
 	}
 }

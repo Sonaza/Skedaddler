@@ -141,5 +141,17 @@ namespace Skedaddler.Properties {
                 this["ArrivalUpdateURL"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool PendingResetOnResume {
+            get {
+                return ((bool)(this["PendingResetOnResume"]));
+            }
+            set {
+                this["PendingResetOnResume"] = value;
+            }
+        }
     }
 }

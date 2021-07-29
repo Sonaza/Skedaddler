@@ -14,6 +14,7 @@ using System.Text.RegularExpressions;
 using System.Drawing.Text;
 using System.Threading;
 using Timer = System.Windows.Forms.Timer;
+using Microsoft.Win32;
 
 namespace Skedaddler
 {
@@ -46,7 +47,21 @@ namespace Skedaddler
 			this.label5.Font = new Font(fonts.Families[0], 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 			this.Font = new Font(fonts.Families[0], 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 
-// 			Properties.Settings.Default.LastStateUpdate = new DateTime(0);
+			SystemEvents.PowerModeChanged += OnPowerChange;
+
+			// 			Properties.Settings.Default.LastStateUpdate = new DateTime(0);
+		}
+		private void OnPowerChange(object s, PowerModeChangedEventArgs e)
+		{
+			switch (e.Mode)
+			{
+				case PowerModes.Resume:
+					OnResume();
+				break;
+
+				case PowerModes.Suspend:
+				break;
+			}
 		}
 
 		private void Skedaddler_Load(object sender, EventArgs e)
@@ -282,33 +297,60 @@ namespace Skedaddler
 
 		private bool updateBlock = false;
 
+		private void OnAutoArrivalCheck()
+		{
+			if (!Properties.Settings.Default.AutoUpdateArrivalTime)
+				return;
+
+			try
+			{
+				if (!Properties.Settings.Default.LastStateUpdate.Equals(DateTime.Today))
+				{
+					updateBlock = true;
+
+					initValues();
+					saveCurrentValues();
+
+					openURLDialog();
+
+					Properties.Settings.Default.PendingResetOnResume = false;
+					Properties.Settings.Default.Save();
+					
+					updateBlock = false;
+				}
+			}
+			catch
+			{
+				// Don't do anything
+			}
+
+		}
+
+		private void OnResume()
+		{
+			if (Properties.Settings.Default.PendingResetOnResume)
+			{
+				updateBlock = true;
+
+				initValues();
+				saveCurrentValues();
+
+				openURLDialog();
+
+				Properties.Settings.Default.PendingResetOnResume = false;
+				Properties.Settings.Default.Save();
+				
+				updateBlock = false;
+			}
+		}
+
 		public void updateTimeRemaining()
 		{
 			// Dirty hack to prevent this method being called again when the code below is doing initValues() call.
 			if (updateBlock)
 				return;
 
-			updateBlock = true;
-
-			if (Properties.Settings.Default.AutoUpdateArrivalTime)
-			{
-				try
-				{
-					if (!Properties.Settings.Default.LastStateUpdate.Equals(DateTime.Today))
-					{
-						initValues();
-						saveCurrentValues();
-
-						openURLDialog();
-					}
-				}
-				catch
-				{
-					// Don't do anything
-				}
-			}
-
-			updateBlock = false;
+			OnAutoArrivalCheck();
 
 			DateTime arrivalTime;
 			if (!parseDateTime(arrivalTimeBox.Text, out arrivalTime))
@@ -337,14 +379,21 @@ namespace Skedaddler
 			DateTime leaveTime = arrivalTime + workDayLength;
 			leaveTimeLabel.Text = leaveTime.ToString(@"HH\:mm", CultureInfo.InvariantCulture);
 
-			TimeSpan timeRemaining = leaveTime - DateTime.Now;
-			if(timeRemaining < TimeSpan.Zero)
+			if (Properties.Settings.Default.PendingResetOnResume)
 			{
-				timeUntilLabel.Text = "Freeedooom!";
+				timeUntilLabel.Text = "Pending Reset...";
 			}
 			else
 			{
-				timeUntilLabel.Text = String.Format("{0}h {1}m {2}s", (int)timeRemaining.TotalHours, timeRemaining.Minutes, timeRemaining.Seconds);
+				TimeSpan timeRemaining = leaveTime - DateTime.Now;
+				if(timeRemaining < TimeSpan.Zero)
+				{
+					timeUntilLabel.Text = "Freeedooom!";
+				}
+				else
+				{
+					timeUntilLabel.Text = String.Format("{0}h {1}m {2}s", (int)timeRemaining.TotalHours, timeRemaining.Minutes, timeRemaining.Seconds);
+				}
 			}
 		}
 

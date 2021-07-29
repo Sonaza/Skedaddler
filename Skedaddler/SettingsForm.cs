@@ -44,6 +44,8 @@ namespace Skedaddler
 
 			arrivalUpdateURL.Text = Properties.Settings.Default.ArrivalUpdateURL;
 
+			resetOnResume.Checked = Properties.Settings.Default.PendingResetOnResume;
+
 			saveIgnore = false;
 		}
 
@@ -212,6 +214,14 @@ namespace Skedaddler
 		private void arrivalWebAddress_TextChanged(object sender, EventArgs e)
 		{
 			saveSettings();
+		}
+
+		private void resetOnResume_CheckedChanged(object sender, EventArgs e)
+		{
+			Properties.Settings.Default.PendingResetOnResume = resetOnResume.Checked;
+			Properties.Settings.Default.Save();
+
+			parent.updateTimeRemaining();
 		}
 	}
 }
