@@ -223,5 +223,20 @@ namespace Skedaddler
 
 			parent.updateTimeRemaining();
 		}
+
+		ToolTip resetOnResumeTooltip;
+
+		private void resetOnResume_Enter(object sender, EventArgs e)
+		{
+			resetOnResumeTooltip = new ToolTip();
+			resetOnResumeTooltip.Show("Resets arrival time and other values next time\nthe computer is woken up from sleep.\n\nThis option is reset if Skedaddler is restarted.",
+				this.resetOnResume, 0, 17);
+		}
+
+		private void resetOnResume_Leave(object sender, EventArgs e)
+		{
+			if (resetOnResumeTooltip != null)
+				resetOnResumeTooltip.Hide(this.autoAdjustBox);
+		}
 	}
 }

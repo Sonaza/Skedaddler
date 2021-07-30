@@ -49,7 +49,11 @@ namespace Skedaddler
 
 			SystemEvents.PowerModeChanged += OnPowerChange;
 
-			// 			Properties.Settings.Default.LastStateUpdate = new DateTime(0);
+			// Don't want this persisting through restarts
+			Properties.Settings.Default.PendingResetOnResume = false;
+			Properties.Settings.Default.Save();
+
+// 			Properties.Settings.Default.LastStateUpdate = new DateTime(0);
 		}
 		private void OnPowerChange(object s, PowerModeChangedEventArgs e)
 		{
@@ -323,7 +327,6 @@ namespace Skedaddler
 			{
 				// Don't do anything
 			}
-
 		}
 
 		private void OnResume()

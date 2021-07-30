@@ -146,6 +146,8 @@ namespace Skedaddler
 			this.resetOnResume.Text = "Reset on Resume";
 			this.resetOnResume.UseVisualStyleBackColor = true;
 			this.resetOnResume.CheckedChanged += new System.EventHandler(this.resetOnResume_CheckedChanged);
+			this.resetOnResume.Enter += new System.EventHandler(this.resetOnResume_Enter);
+			this.resetOnResume.Leave += new System.EventHandler(this.resetOnResume_Leave);
 			// 
 			// SettingsForm
 			// 
